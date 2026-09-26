@@ -1,0 +1,209 @@
+<div class="demand-page">
+  <section class="hero">
+    <span class="eyebrow">ParaTech AI</span>
+
+    <h1>Prévision de la demande</h1>
+
+    <p>
+      Anticipez les ventes futures d’un produit afin de mieux préparer le
+      réapprovisionnement, éviter les ruptures et adapter le stock à la demande réelle.
+    </p>
+  </section>
+
+  <section class="content-grid">
+    <div class="panel control-panel">
+      <h2>Lancer une prévision</h2>
+
+      <div class="form-group">
+        <label for="selectedCategory">Catégorie</label>
+
+        <select
+          id="selectedCategory"
+          name="selectedCategory"
+          [(ngModel)]="selectedCategory"
+          (change)="onCategoryChange()"
+        >
+          <option value="">Toutes les catégories</option>
+          <option *ngFor="let category of categories" [value]="category">
+            {{ category }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="productSearch">Nom du produit</label>
+
+        <input
+          id="productSearch"
+          type="text"
+          name="productSearch"
+          [(ngModel)]="productSearch"
+          (input)="filterProducts()"
+          placeholder="Exemple : elmex"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="products-list" *ngIf="filteredProducts.length > 0">
+        <button
+          type="button"
+          class="product-option"
+          *ngFor="let product of filteredProducts"
+          (click)="selectProduct(product)"
+          [class.active]="selectedProductName === product.product_name"
+        >
+          <div>
+            <strong>{{ product.product_name }}</strong>
+            <span>{{ product.category || 'Catégorie non définie' }}</span>
+          </div>
+        </button>
+      </div>
+
+      <div *ngIf="filteredProducts.length === 0 && !loadingProducts" class="empty-small">
+        Aucun produit disponible pour cette recherche.
+      </div>
+
+      <div class="form-group">
+        <label for="horizon">Nombre de jours à prévoir</label>
+
+        <input
+          id="horizon"
+          type="number"
+          name="horizon"
+          [(ngModel)]="horizon"
+          min="1"
+          max="365"
+          placeholder="Exemple : 30"
+        />
+      </div>
+
+      <div class="helper-box">
+        La liste contient uniquement les produits ayant assez d’historique de ventes
+        pour générer une prévision plus fiable.
+      </div>
+
+      <div *ngIf="errorMessage" class="feedback error">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage && !errorMessage" class="feedback success">
+        {{ successMessage }}
+      </div>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="generateForecast()"
+        [disabled]="loadingForecast || loadingProducts"
+      >
+        {{ loadingForecast ? 'Prévision en cours...' : 'Générer la prévision' }}
+      </button>
+    </div>
+
+    <div class="panel result-panel">
+      <h2>Résultat</h2>
+
+      <div *ngIf="!result && !loadingForecast" class="empty-state">
+        Aucun résultat pour le moment. Choisissez un produit puis lancez une prévision.
+      </div>
+
+      <div *ngIf="loadingForecast" class="empty-state">
+        Génération de la prévision en cours...
+      </div>
+
+      <div *ngIf="result && summary" class="forecast-result">
+        <div class="result-header">
+          <div>
+            <h3>{{ result.product_name }}</h3>
+            <p>Prévision sur {{ result.horizon }} jours</p>
+          </div>
+
+          <span class="status-badge" [ngClass]="getStatusClass(summary.status)">
+            {{ summary.statusLabel }}
+          </span>
+        </div>
+
+        <div class="business-summary">
+          <h4>Lecture rapide</h4>
+
+          <p>
+            Sur les <strong>{{ result.horizon }} prochains jours</strong>, la demande
+            estimée est d’environ
+            <strong>{{ formatQuantity(summary.totalForecast) }} unités</strong>.
+            Cela représente une moyenne de
+            <strong>{{ formatNumber(summary.averagePerDay) }} unités par jour</strong>.
+          </p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card main-stat">
+            <span>Quantité totale prévue</span>
+            <strong>{{ formatQuantity(summary.totalForecast) }}</strong>
+            <small>unités à prévoir</small>
+          </div>
+
+          <div class="stat-card">
+            <span>Demande moyenne</span>
+            <strong>{{ formatNumber(summary.averagePerDay) }}</strong>
+            <small>unités / jour</small>
+          </div>
+
+          <div class="stat-card">
+            <span>Pic de demande prévu</span>
+            <strong>{{ formatQuantity(summary.peakDay?.predicted_quantity) }}</strong>
+            <small>{{ summary.peakDay?.date || '—' }}</small>
+          </div>
+
+          <div class="stat-card">
+            <span>Demande minimale prévue</span>
+            <strong>{{ formatQuantity(summary.lowestDay?.predicted_quantity) }}</strong>
+            <small>{{ summary.lowestDay?.date || '—' }}</small>
+          </div>
+        </div>
+
+        <div class="recommendation-box" [ngClass]="getStatusClass(summary.status)">
+          <h4>Recommandation</h4>
+          <p>{{ summary.recommendation }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="table-panel" *ngIf="result && summary">
+    <div class="table-header">
+      <div>
+        <h2>Détail de la prévision</h2>
+        <p>
+          Toutes les journées demandées sont affichées. Le tableau est scrollable
+          pour garder une lecture claire.
+        </p>
+      </div>
+    </div>
+
+    <div class="forecast-table-wrapper">
+      <div class="forecast-table">
+        <div class="forecast-row table-head">
+          <span>Date</span>
+          <span>Quantité prévue</span>
+          <span>Interprétation</span>
+        </div>
+
+        <div class="forecast-row" *ngFor="let item of result.forecast">
+          <span>{{ item.date }}</span>
+
+          <strong>
+            {{ formatNumber(item.predicted_quantity) }} unités
+          </strong>
+
+          <span class="row-note">
+            {{
+              item.predicted_quantity >= summary.averagePerDay
+                ? 'Au-dessus de la moyenne prévue'
+                : 'Demande normale ou faible'
+            }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

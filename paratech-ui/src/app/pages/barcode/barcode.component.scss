@@ -1,0 +1,175 @@
+.page {
+  min-height: 100vh;
+  background: #f4faf6;
+  padding: 48px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+header {
+  margin-bottom: 30px;
+}
+
+header h1 {
+  color: #0f5132;
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+header p {
+  color: #5d7065;
+  font-size: 17px;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 24px;
+}
+
+.upload-card,
+.result-card,
+.recommendations-card {
+  background: white;
+  border-radius: 24px;
+  padding: 30px;
+  border: 1px solid #dff5e1;
+  box-shadow: 0 12px 30px rgba(15, 81, 50, 0.1);
+}
+
+h2 {
+  color: #0f5132;
+  margin-top: 0;
+}
+
+.file-label {
+  display: block;
+  padding: 16px;
+  border: 2px dashed #0f9f5f;
+  border-radius: 18px;
+  text-align: center;
+  color: #0f5132;
+  font-weight: 800;
+  cursor: pointer;
+  background: #f4faf6;
+  margin-bottom: 18px;
+}
+
+.file-label input {
+  display: none;
+}
+
+.preview {
+  width: 100%;
+  max-height: 280px;
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: #eefaf1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.file-name {
+  color: #5d7065;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 16px;
+  background: #0f9f5f;
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0d7f4d;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error {
+  background: #fde8e8;
+  color: #b42318;
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.empty {
+  color: #7a8a80;
+  background: #f4faf6;
+  padding: 18px;
+  border-radius: 16px;
+}
+
+.status {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.status.success {
+  background: #e7f8ed;
+  color: #0f5132;
+}
+
+.status.failed {
+  background: #fde8e8;
+  color: #b42318;
+}
+
+.product {
+  background: #f4faf6;
+  padding: 20px;
+  border-radius: 18px;
+}
+
+.product h3 {
+  color: #0f5132;
+  margin-top: 0;
+}
+
+.product p {
+  color: #5d7065;
+}
+
+.recommendations-card {
+  margin-top: 24px;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.recommendation {
+  background: #f4faf6;
+  padding: 18px;
+  border-radius: 18px;
+}
+
+.recommendation h3 {
+  color: #0f5132;
+  margin-top: 0;
+}
+
+.recommendation p {
+  color: #5d7065;
+}

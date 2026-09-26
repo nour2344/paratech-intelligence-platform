@@ -1,0 +1,74 @@
+<div class="page">
+  <header>
+    <h1>Identification par code-barres</h1>
+    <p>
+      Importez une image contenant un code-barres pour identifier le produit
+      et obtenir des recommandations similaires.
+    </p>
+  </header>
+
+  <section class="content">
+    <div class="upload-card">
+      <h2>Scanner un produit</h2>
+
+      <label class="file-label">
+        Choisir une image
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+      </label>
+
+      <div class="preview" *ngIf="previewUrl">
+        <img [src]="previewUrl" alt="Aperçu du produit" />
+      </div>
+
+      <p class="file-name" *ngIf="selectedFile">
+        Image sélectionnée : {{ selectedFile.name }}
+      </p>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <button (click)="scanBarcode()" [disabled]="loading">
+        {{ loading ? 'Analyse en cours...' : 'Scanner le code-barres' }}
+      </button>
+    </div>
+
+    <div class="result-card">
+      <h2>Résultat du scan</h2>
+
+      <div class="empty" *ngIf="!result">
+        Aucun résultat pour le moment.
+      </div>
+
+      <div *ngIf="result">
+        <div class="status" [class.success]="result.success" [class.failed]="!result.success">
+          {{ result.success ? 'Produit identifié' : 'Scan échoué' }}
+        </div>
+
+        <p *ngIf="result.barcode">
+          <strong>Code-barres :</strong> {{ result.barcode }}
+        </p>
+
+        <div class="product" *ngIf="result.product">
+          <h3>{{ result.product.product_name }}</h3>
+          <p><strong>Catégorie :</strong> {{ result.product.product_category }}</p>
+          <p><strong>Description :</strong> {{ result.product.product_description }}</p>
+          <p><strong>Stock :</strong> {{ result.product.stock_quantity }}</p>
+          <p><strong>Valeur stock :</strong> {{ result.product.stock_value }}</p>
+          <p><strong>TVA :</strong> {{ result.product.tva }}</p>
+          <p><strong>Seuil alerte :</strong> {{ result.product.alert_quantity }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="recommendations-card" *ngIf="result?.recommendations?.length">
+    <h2>Produits similaires recommandés</h2>
+
+    <div class="recommendations-grid">
+      <div class="recommendation" *ngFor="let rec of result?.recommendations">
+        <h3>{{ rec.product_name }}</h3>
+        <p><strong>Catégorie :</strong> {{ rec.product_category }}</p>
+        <p><strong>Score :</strong> {{ rec.similarity_score }}</p>
+      </div>
+    </div>
+  </section>
+</div>

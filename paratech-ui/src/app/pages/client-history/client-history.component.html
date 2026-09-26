@@ -1,0 +1,178 @@
+﻿<div class="history-page">
+  <section class="hero">
+    <span class="eyebrow">ParaTech AI</span>
+
+    <h1>Historique des recherches clients</h1>
+
+    <p>
+      Suivez l’utilisation du système de recommandation, les recherches effectuées
+      par les clients et les produits proposés automatiquement.
+    </p>
+  </section>
+
+  <section class="stats-grid">
+    <div class="stat-card">
+      <span>Recherches totales</span>
+      <strong>{{ totalSearches }}</strong>
+      <small>requêtes enregistrées</small>
+    </div>
+
+    <div class="stat-card">
+      <span>Produits recommandés</span>
+      <strong>{{ totalProductsRecommended }}</strong>
+      <small>suggestions générées</small>
+    </div>
+
+    <div class="stat-card">
+      <span>Catégories touchées</span>
+      <strong>{{ uniqueCategories }}</strong>
+      <small>domaines produits</small>
+    </div>
+
+    <div class="stat-card">
+      <span>Dernière activité</span>
+      <strong class="date-value">{{ lastSearchDate }}</strong>
+      <small>dernière recherche</small>
+    </div>
+  </section>
+
+  <section class="toolbar">
+    <div>
+      <h2>Activité de recommandation</h2>
+      <p>
+        Sélectionnez une ou plusieurs recommandations pour les supprimer.
+      </p>
+    </div>
+
+    <div class="toolbar-actions">
+      <div class="search-box">
+        <input
+          type="text"
+          name="searchTerm"
+          [(ngModel)]="searchTerm"
+          (input)="filterHistory()"
+          placeholder="Rechercher par produit, catégorie, mode..."
+        />
+
+        <button type="button" (click)="clearSearch()" *ngIf="searchTerm">
+          Effacer
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="delete-button"
+        (click)="deleteSelected()"
+        [disabled]="selectedCount === 0 || deleting"
+      >
+        {{ deleting ? 'Suppression...' : 'Supprimer sélection' }}
+      </button>
+    </div>
+  </section>
+
+  <section class="selection-bar" *ngIf="filteredHistory.length > 0">
+    <label class="select-all">
+      <input
+        type="checkbox"
+        [checked]="allVisibleSelected"
+        (change)="toggleSelectAllVisible()"
+      />
+
+      <span>Tout sélectionner</span>
+    </label>
+
+    <strong>{{ selectedCount }} sélectionnée(s)</strong>
+  </section>
+
+  <div *ngIf="loading" class="empty-state">
+    Chargement de l’historique...
+  </div>
+
+  <div *ngIf="errorMessage" class="feedback error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage && !errorMessage" class="feedback success">
+    {{ successMessage }}
+  </div>
+
+  <div
+    *ngIf="!loading && !errorMessage && filteredHistory.length === 0"
+    class="empty-state"
+  >
+    Aucun historique trouvé.
+  </div>
+
+  <section class="history-list" *ngIf="!loading && filteredHistory.length > 0">
+    <article
+      class="history-card"
+      *ngFor="let item of filteredHistory"
+      [class.selected]="isSelected(item)"
+    >
+      <div class="card-select">
+        <input
+          type="checkbox"
+          [checked]="isSelected(item)"
+          (change)="toggleSelection(item)"
+        />
+      </div>
+
+      <div class="card-top">
+        <div>
+          <span class="query-label">Recherche client</span>
+          <h3>{{ item.query }}</h3>
+        </div>
+
+        <span class="mode-badge">{{ item.mode }}</span>
+      </div>
+
+      <div class="meta-grid">
+        <div>
+          <span>Nom client</span>
+          <strong>{{ item.clientName }}</strong>
+        </div>
+
+        <div>
+          <span>Date</span>
+          <strong>{{ item.date }}</strong>
+        </div>
+
+        <div>
+          <span>Catégorie</span>
+          <strong>{{ item.category }}</strong>
+        </div>
+
+        <div>
+          <span>Produits proposés</span>
+          <strong>{{ item.products.length }}</strong>
+        </div>
+      </div>
+
+      <div class="products-section">
+        <h4>Produits recommandés</h4>
+
+        <div class="products-grid" *ngIf="item.products.length > 0">
+          <div class="product-card" *ngFor="let product of item.products">
+            <div class="product-icon">Rx</div>
+
+            <div class="product-info">
+              <strong>{{ product.name }}</strong>
+
+              <span *ngIf="product.category">
+                {{ product.category }}
+              </span>
+            </div>
+
+            <div class="score-pill">
+              {{ formatScore(product.score) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="no-products" *ngIf="item.products.length === 0">
+          Aucun produit recommandé pour cette recherche.
+        </div>
+      </div>
+    </article>
+  </section>
+</div>

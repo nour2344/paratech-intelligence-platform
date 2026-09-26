@@ -1,0 +1,161 @@
+﻿<div class="landing-page">
+  <nav class="navbar">
+    <div class="brand">
+<div class="logo-frame">
+  <img src="/paratech-logo.png" alt="ParaTech logo" class="sidebar-logo" />
+</div>
+      <div>
+        <h1>ParaTech</h1>
+        <p>Parapharmacy Intelligence Platform</p>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <a routerLink="/login" class="nav-button">Accéder à la plateforme</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <span class="eyebrow">BI + AI for modern parapharmacies</span>
+
+      <h2>
+        Transformez les données de votre parapharmacie en décisions intelligentes.
+      </h2>
+
+      <p class="hero-description">
+        ParaTech combine tableaux de bord, prévision de la demande, détection du
+        risque de stock, alertes intelligentes et recommandations produits pour
+        améliorer la performance de la parapharmacie.
+      </p>
+
+      
+
+      <div class="trust-row">
+        <div>
+          <strong>BI</strong>
+          <span>Dashboards</span>
+        </div>
+
+        <div>
+          <strong>AI</strong>
+          <span>Prévisions</span>
+        </div>
+
+        <div>
+          <strong>ML</strong>
+          <span>Stock Risk</span>
+        </div>
+
+        <div>
+          <strong>UX</strong>
+          <span>Décision rapide</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="visual-card main-card">
+        <div class="card-header">
+          <span>ParaTech Command Center</span>
+          <strong>Live</strong>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric-card">
+            <span>Ventes du mois</span>
+            <strong>+18%</strong>
+          </div>
+
+          <div class="metric-card">
+            <span>Stock critique</span>
+            <strong>12</strong>
+          </div>
+
+          <div class="metric-card">
+            <span>Prévision demande</span>
+            <strong>30j</strong>
+          </div>
+
+          <div class="metric-card">
+            <span>Alertes actives</span>
+            <strong>5</strong>
+          </div>
+        </div>
+
+        <div class="stock-alert">
+          <div>
+            <strong>Risque de rupture détecté</strong>
+            <p>Réapprovisionnement recommandé pour les produits sensibles.</p>
+          </div>
+
+          <span>Action</span>
+        </div>
+      </div>
+
+      <div class="floating-card card-one">
+        <span>Prévision</span>
+        <strong>+238 unités</strong>
+      </div>
+
+      <div class="floating-card card-two">
+        <span>Top produit</span>
+        <strong>ELMEX</strong>
+      </div>
+
+      <div class="floating-card card-three">
+        <span>Stock</span>
+        <strong>Sécurisé</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-section" id="features">
+    <div class="section-heading">
+      <span class="eyebrow">Smart modules</span>
+
+      <h2>Une plateforme complète pour piloter la parapharmacie</h2>
+
+      <p>
+        ParaTech centralise les fonctionnalités essentielles pour analyser,
+        prévoir, recommander et agir plus rapidement.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of features">
+        <div class="feature-icon">{{ feature.icon }}</div>
+
+        <h3>{{ feature.title }}</h3>
+
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="workspace-section">
+    <div class="section-heading">
+      <span class="eyebrow">Workspaces</span>
+
+      <h2>Un espace adapté à chaque utilisateur</h2>
+
+      <p>
+        Chaque rôle dispose d’un environnement pensé pour ses besoins.
+        Cette séparation rend l’application plus claire, plus sécurisée et plus professionnelle.
+      </p>
+    </div>
+
+    <div class="roles-grid">
+      <div class="role-card" *ngFor="let role of roles">
+        <h3>{{ role.title }}</h3>
+
+        <p>{{ role.description }}</p>
+
+      </div>
+    </div>
+  </section>
+
+ 
+
+  
+</div>

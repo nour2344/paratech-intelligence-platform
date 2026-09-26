@@ -1,0 +1,135 @@
+﻿<div class="register-page">
+  <a routerLink="/" class="back-home">
+    ← Retour à l’accueil
+  </a>
+
+  <section class="register-card">
+    <div class="brand">
+<div class="logo-frame">
+  <img src="/paratech-logo.png" alt="ParaTech logo" class="app-logo" />
+</div>
+      <div>
+        <h2>ParaTech</h2>
+        <p>Client registration</p>
+      </div>
+    </div>
+
+    <div class="title-block">
+      <h1>Créer un compte client</h1>
+      <p>
+        Créez votre espace client pour accéder aux recommandations personnalisées.
+      </p>
+    </div>
+
+    <form class="register-form" (ngSubmit)="register()" novalidate>
+      <div class="form-group">
+        <label for="fullName">Nom complet</label>
+
+        <input
+          id="fullName"
+          type="text"
+          name="fullName"
+          [(ngModel)]="fullName"
+          (blur)="markFullNameTouched()"
+          placeholder="Exemple : Nour Dhhibi"
+          autocomplete="name"
+          [class.invalid]="fullNameTouched && !isFullNameValid"
+        />
+
+        <small class="field-error" *ngIf="fullNameTouched && !fullName">
+          Le nom complet est obligatoire.
+        </small>
+
+        <small class="field-error" *ngIf="fullNameTouched && fullName && !isFullNameValid">
+          Le nom complet doit contenir au moins 2 caractères.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+
+        <input
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          (blur)="markEmailTouched()"
+          placeholder="Exemple : client@paratech.com"
+          autocomplete="email"
+          [class.invalid]="emailTouched && !isEmailValid"
+        />
+
+        <small class="field-error" *ngIf="emailTouched && !email">
+          L’email est obligatoire.
+        </small>
+
+        <small class="field-error" *ngIf="emailTouched && email && !isEmailValid">
+          Format invalide. Exemple : client&#64;paratech.com
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+
+        <input
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          (blur)="markPasswordTouched()"
+          placeholder="Minimum 6 caractères"
+          autocomplete="new-password"
+          [class.invalid]="passwordTouched && !isPasswordValid"
+        />
+
+        <small class="field-error" *ngIf="passwordTouched && !password">
+          Le mot de passe est obligatoire.
+        </small>
+
+        <small class="field-error" *ngIf="passwordTouched && password && !isPasswordValid">
+          Minimum 6 caractères, avec au moins une lettre et un chiffre.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+
+        <input
+          id="confirmPassword"
+          type="password"
+          name="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          (blur)="markConfirmPasswordTouched()"
+          placeholder="Retapez votre mot de passe"
+          autocomplete="new-password"
+          [class.invalid]="confirmPasswordTouched && !doPasswordsMatch"
+        />
+
+        <small class="field-error" *ngIf="confirmPasswordTouched && !confirmPassword">
+          La confirmation du mot de passe est obligatoire.
+        </small>
+
+        <small class="field-error" *ngIf="confirmPasswordTouched && confirmPassword && !doPasswordsMatch">
+          Les deux mots de passe ne correspondent pas.
+        </small>
+      </div>
+
+      <div *ngIf="errorMessage" class="feedback error">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="successMessage && !errorMessage" class="feedback success">
+        {{ successMessage }}
+      </div>
+
+      <button type="submit" class="register-button" [disabled]="loading || !isFormValid">
+        {{ loading ? 'Création...' : 'Créer mon compte' }}
+      </button>
+    </form>
+
+    <p class="login-link">
+      Vous avez déjà un compte ?
+      <a routerLink="/login">Se connecter</a>
+    </p>
+  </section>
+</div>

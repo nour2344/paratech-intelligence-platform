@@ -1,0 +1,44 @@
+<div class="dashboard">
+  <aside>
+    <h2>ParaTech</h2>
+    <p>Espace Admin</p>
+
+    <a routerLink="/admin/dashboard">Dashboard</a>
+    <a routerLink="/admin/recommendations">Recommandations</a>
+    <a routerLink="/admin/demand">Prévision demande</a>
+    <a routerLink="/admin/stock">Risque stock</a>
+    <a routerLink="/admin/alerts">Alertes</a>
+    <a routerLink="/admin/barcode">Barcode</a>
+
+    <button (click)="logout()">Déconnexion</button>
+  </aside>
+
+  <main>
+    <h1>Tableau de bord administrateur</h1>
+    <p>
+      Gérez les algorithmes intelligents de ParaTech depuis une interface unique.
+    </p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Recommandation</h3>
+        <p>Suggestions personnalisées de produits.</p>
+      </div>
+
+      <div class="card">
+        <h3>Prévision de demande</h3>
+        <p>Anticipation des ventes futures.</p>
+      </div>
+
+      <div class="card">
+        <h3>Risque de rupture</h3>
+        <p>Détection des produits à risque de rupture.</p>
+      </div>
+
+      <div class="card">
+        <h3>Alertes</h3>
+        <p>Notifications automatiques pour aider à la décision.</p>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,273 @@
+<div class="page">
+  <!-- CLIENT ONLY TOPBAR -->
+  <header class="client-topbar" *ngIf="isClientPage">
+    <div class="client-brand">
+      <img src="/paratech-logo.png" alt="ParaTech logo" class="client-logo" />
+
+      <div>
+        <strong>ParaTech</strong>
+        <span>Recommandation client</span>
+      </div>
+    </div>
+
+    <button type="button" class="logout-button" (click)="logout()">
+      Déconnexion
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div>
+
+      <div class="hero-title-row">
+
+        <div>
+          <h1>Système de recommandation</h1>
+          <p>
+            Recommandez rapidement des produits parapharmaceutiques selon un produit
+            recherché ou selon les préférences du client.
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="main-grid">
+    <!-- LEFT PANEL -->
+    <div class="control-panel">
+      <div class="panel-header">
+        <h2>Nouvelle recommandation</h2>
+        <p>Choisissez une méthode de recherche.</p>
+      </div>
+
+      <!-- Product recommendation -->
+      <div class="method-card active-method">
+        <div class="method-title">
+          <span class="method-icon">🔎</span>
+
+          <div>
+            <h3>Par produit</h3>
+            <p>Recommander des produits similaires.</p>
+          </div>
+        </div>
+
+        <label for="query">Nom du produit ou besoin</label>
+
+        <input
+          id="query"
+          type="text"
+          [(ngModel)]="query"
+          placeholder="Exemple : crème solaire, shampooing, soin visage..."
+        />
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="generateRecommendation()"
+          [disabled]="loading"
+        >
+          {{ loading ? 'Génération en cours...' : 'Générer par produit' }}
+        </button>
+      </div>
+
+      <!-- Preference recommendation -->
+      <div class="method-card">
+        <div class="method-title">
+          <span class="method-icon">⚙️</span>
+
+          <div>
+            <h3>Par préférences</h3>
+            <p>Filtrer selon catégorie et prix maximum.</p>
+          </div>
+        </div>
+
+        <label for="category">Catégorie</label>
+
+        <select id="category" [(ngModel)]="category">
+          <option value="">Toutes les catégories</option>
+          <option value="TOILETTE">TOILETTE</option>
+          <option value="SOIN">SOIN</option>
+          <option value="COMPLEMENTS ALIMENTAIRES">
+            COMPLÉMENTS ALIMENTAIRES
+          </option>
+          <option value="ACCESSOIRE">ACCESSOIRE</option>
+          <option value="NATURE">NATURE</option>
+          <option value="DIVERS">DIVERS</option>
+        </select>
+
+        <label for="maxPrice">Prix maximum</label>
+
+        <input
+          id="maxPrice"
+          type="number"
+          [(ngModel)]="maxPrice"
+          placeholder="Exemple : 50"
+        />
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="generatePreferenceRecommendation()"
+          [disabled]="loading"
+        >
+          {{ loading ? 'Génération en cours...' : 'Recommander par préférences' }}
+        </button>
+      </div>
+
+      <p class="success" *ngIf="successMessage">
+        {{ successMessage }}
+      </p>
+
+      <p class="error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </p>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="results-panel">
+      <div class="panel-header result-header">
+        <div>
+          <h2>Produits recommandés</h2>
+          <p>Résultat généré par le moteur de recommandation.</p>
+        </div>
+
+        <span class="count-badge" *ngIf="products.length > 0">
+          {{ products.length }} produits
+        </span>
+      </div>
+
+      <div class="empty-state" *ngIf="products.length === 0">
+        <div class="empty-icon">🧴</div>
+
+        <h3>Aucun résultat pour le moment</h3>
+
+        <p>
+          Lancez une recommandation pour afficher les produits les plus adaptés.
+        </p>
+      </div>
+
+      <div class="products-grid" *ngIf="products.length > 0">
+        <div
+          class="product-card"
+          *ngFor="let product of products; let i = index"
+        >
+          <div class="rank">#{{ i + 1 }}</div>
+
+          <div class="product-content">
+            <h3>{{ getProductName(product) }}</h3>
+
+            <div class="product-meta">
+              <span
+                *ngIf="product.score !== null && product.score !== undefined"
+                class="score"
+              >
+                Similarité {{ formatScore(product.score) }}
+              </span>
+            </div>
+
+            <div class="product-details">
+              <p *ngIf="product.category">
+                <strong>Catégorie :</strong> {{ product.category }}
+              </p>
+
+              <p *ngIf="product.brand">
+                <strong>Marque :</strong> {{ product.brand }}
+              </p>
+
+              <p *ngIf="product.price !== null && product.price !== undefined">
+                <strong>Prix :</strong> {{ product.price }} DT
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENT ONLY HISTORY -->
+  <section class="history-panel" *ngIf="isClientPage">
+    <div class="history-header">
+      <div>
+        <h2>Historique des recommandations</h2>
+        <p>Suivi des dernières recherches effectuées.</p>
+      </div>
+
+      <div class="history-actions" *ngIf="history.length > 0">
+        <button
+          type="button"
+          class="secondary-action"
+          (click)="selectAllHistory()"
+        >
+          Tout sélectionner
+        </button>
+
+        <button
+          type="button"
+          class="secondary-action"
+          (click)="clearHistorySelection()"
+        >
+          Annuler
+        </button>
+
+        <button
+          type="button"
+          class="danger-action"
+          (click)="deleteSelectedHistory()"
+          [disabled]="selectedHistoryIndexes.size === 0"
+        >
+          Supprimer sélection
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-history" *ngIf="loadingHistory">
+      Chargement de l’historique...
+    </div>
+
+    <div class="empty-history" *ngIf="history.length === 0 && !loadingHistory">
+      Aucun historique pour le moment.
+    </div>
+
+    <div class="history-list" *ngIf="history.length > 0">
+      <article
+        class="history-item"
+        *ngFor="let item of history; let i = index"
+        [class.selected]="isHistorySelected(i)"
+      >
+        <div class="history-item-header">
+          <label class="history-select">
+            <input
+              type="checkbox"
+              [checked]="isHistorySelected(i)"
+              (change)="toggleHistorySelection(i)"
+            />
+            <span></span>
+          </label>
+
+          <div class="history-info">
+            <strong>{{ getHistoryTitle(item) }}</strong>
+            <span>{{ getHistoryDate(item) | date: 'short' }}</span>
+          </div>
+
+          <button
+            type="button"
+            class="delete-one"
+            (click)="deleteOneHistory(i)"
+          >
+            Supprimer
+          </button>
+        </div>
+
+        <div class="history-products" *ngIf="getHistoryProducts(item).length > 0">
+          <span *ngFor="let product of getHistoryProducts(item)">
+            {{ getProductName(product) }}
+          </span>
+        </div>
+
+        <div class="no-history-products" *ngIf="getHistoryProducts(item).length === 0">
+          Aucun produit recommandé enregistré pour cette recherche.
+        </div>
+      </article>
+    </div>
+  </section>
+</div>

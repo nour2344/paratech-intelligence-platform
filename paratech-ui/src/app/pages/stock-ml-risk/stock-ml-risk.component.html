@@ -1,0 +1,167 @@
+<div class="stock-ml-page">
+  <section class="hero">
+    <span class="eyebrow"></span>
+
+    <h1>Risque de stock intelligent</h1>
+
+    <p>
+      Recherchez un produit, sélectionnez-le, puis analysez son risque de rupture
+      avec un modèle Machine Learning et une recommandation claire.
+    </p>
+  </section>
+
+  <section class="content-grid">
+    <!-- LEFT PANEL -->
+    <div class="panel">
+      <h2>Lancer une analyse</h2>
+
+      <form class="search-form" (ngSubmit)="searchProducts()">
+        <label for="productQuery">Nom du produit</label>
+
+        <div class="search-row">
+          <input
+            id="productQuery"
+            type="text"
+            name="productQuery"
+            [(ngModel)]="productQuery"
+            placeholder="Exemple : elmex"
+          />
+
+          <button type="submit" [disabled]="loadingSearch">
+            {{ loadingSearch ? 'Recherche...' : 'Rechercher' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="helper-box">
+        Cherchez un produit existant dans le catalogue, puis cliquez sur un résultat
+        pour lancer l’analyse ML.
+      </div>
+
+      <div *ngIf="errorMessage" class="feedback error">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="searchMessage && !errorMessage" class="feedback success">
+        {{ searchMessage }}
+      </div>
+
+      <div class="results-list" *ngIf="products.length > 0">
+        <button
+          type="button"
+          class="result-card"
+          *ngFor="let product of products"
+          (click)="analyzeProduct(product)"
+          [class.active]="selectedProduct?.product_name === product.product_name"
+        >
+          <div class="result-main">
+            <h3>{{ product.product_name }}</h3>
+            <p>{{ product.category }}</p>
+          </div>
+
+          <div class="result-meta">
+            <span>
+              Stock :
+              <strong>{{ product.current_stock }}</strong>
+            </span>
+
+            <span>
+              Seuil :
+              <strong>{{ product.alert_threshold }}</strong>
+            </span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="panel">
+      <h2>Résultat</h2>
+
+      <div *ngIf="!analysis && !loadingAnalysis && !analysisError" class="empty-state">
+        Aucun résultat pour le moment.
+      </div>
+
+      <div *ngIf="loadingAnalysis" class="empty-state">
+        Analyse en cours...
+      </div>
+
+      <div *ngIf="analysisError" class="feedback error">
+        {{ analysisError }}
+      </div>
+
+      <div *ngIf="analysis" class="analysis-card">
+        <div class="analysis-header">
+          <div>
+            <h3>{{ analysis.product_name }}</h3>
+            <p>{{ analysis.category }}</p>
+          </div>
+
+          <div class="badges">
+            <span class="risk-badge" [ngClass]="getRiskClass(analysis.risk_level)">
+              {{ analysis.risk_label }}
+            </span>
+
+            <span
+              class="alert-badge"
+              [ngClass]="getAlertClass(analysis.alert.severity)"
+            >
+              {{ analysis.alert.severity || 'INFO' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="label">Stock actuel</span>
+            <strong>{{ formatNumber(analysis.current_stock) }}</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="label">Seuil d’alerte</span>
+            <strong>{{ formatNumber(analysis.alert_threshold) }}</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="label">Ventes moyennes / jour</span>
+            <strong>{{ formatNumber(analysis.average_daily_sales) }}</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="label">Jours avant rupture</span>
+            <strong>
+              {{ formatNumber(analysis.estimated_days_before_stockout) }}
+            </strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="label">Niveau de risque</span>
+            <strong>{{ analysis.risk_label }}</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="label">Confiance</span>
+            <strong>{{ formatConfidence(analysis.confidence) }}</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="label">Statut</span>
+            <strong>
+              {{ analysis.alert.active ? 'À surveiller' : 'Normal' }}
+            </strong>
+          </div>
+        </div>
+
+        <div class="message-box" *ngIf="analysis.alert.active">
+          <h4>{{ analysis.alert.title }}</h4>
+          <p>{{ analysis.alert.message }}</p>
+        </div>
+
+        <div class="recommendation-box">
+          <h4>Recommandation</h4>
+          <p>{{ analysis.recommendation }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

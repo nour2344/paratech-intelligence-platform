@@ -1,0 +1,55 @@
+﻿<div class="cashier-layout" [class.sidebar-closed]="!sidebarOpen">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+<div class="logo-frame">
+  <img src="/paratech-logo.png" alt="ParaTech logo" class="sidebar-logo" />
+</div>
+      <div class="brand-text">
+        <h2>ParaTech</h2>
+        <p>Espace Cashier</p>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a
+        routerLink="/cashier/dashboard"
+        routerLinkActive="active"
+        class="menu-link"
+      >
+        <span class="menu-icon"></span>
+        <span class="menu-text">Dashboard</span>
+      </a>
+
+      <a
+        routerLink="/cashier/barcode"
+        routerLinkActive="active"
+        class="menu-link"
+      >
+        <span class="menu-icon"></span>
+        <span class="menu-text">Barcode</span>
+      </a>
+
+      <a
+        routerLink="/cashier/stock-ml"
+        routerLinkActive="active"
+        class="menu-link"
+      >
+        <span class="menu-icon"></span>
+        <span class="menu-text">Risque de stock</span>
+      </a>
+    </nav>
+
+    <button type="button" class="logout-button" (click)="logout()">
+      <span class="menu-icon">↪</span>
+      <span class="menu-text">Déconnexion</span>
+    </button>
+  </aside>
+
+  <main class="cashier-content">
+    <button type="button" class="sidebar-toggle" (click)="toggleSidebar()">
+      ☰
+    </button>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>

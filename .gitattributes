@@ -1,0 +1,2 @@
+paratech-backend/app/barcode/model_files/cosine_sim.pkl filter=lfs diff=lfs merge=lfs -text
+paratech-backend/app/recommendation/model_files/cosine_similarity.pkl filter=lfs diff=lfs merge=lfs -text

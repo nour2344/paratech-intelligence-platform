@@ -1,0 +1,89 @@
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  background: #f4faf6;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+aside {
+  width: 270px;
+  background: #0f5132;
+  color: white;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+aside h2 {
+  margin: 0;
+  font-size: 30px;
+}
+
+aside p {
+  margin-bottom: 32px;
+  color: #b7e4c7;
+}
+
+aside a {
+  color: white;
+  text-decoration: none;
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+aside a:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+aside button {
+  margin-top: auto;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: #dff5e1;
+  color: #0f5132;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+main {
+  flex: 1;
+  padding: 48px;
+}
+
+main h1 {
+  color: #0f5132;
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+main > p {
+  color: #5d7065;
+  font-size: 17px;
+  margin-bottom: 32px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: white;
+  padding: 28px;
+  border-radius: 22px;
+  box-shadow: 0 12px 30px rgba(15, 81, 50, 0.1);
+  border: 1px solid #dff5e1;
+}
+
+.card h3 {
+  color: #0f5132;
+  margin-top: 0;
+}
+
+.card p {
+  color: #62766b;
+}

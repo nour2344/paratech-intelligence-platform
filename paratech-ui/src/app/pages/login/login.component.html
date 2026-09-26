@@ -1,0 +1,83 @@
+﻿<div class="login-page">
+  <a routerLink="/" class="back-home">
+    ← Retour à l’accueil
+  </a>
+
+  <section class="login-card">
+    <div class="brand">
+<div class="logo-frame">
+  <img src="/paratech-logo.png" alt="ParaTech logo" class="app-logo" />
+</div>
+      <div>
+        <h2>ParaTech</h2>
+        <p>Parapharmacy Intelligence Platform</p>
+      </div>
+    </div>
+
+    <div class="title-block">
+      <h1>Connexion</h1>
+      <p>Accédez à votre espace selon votre rôle</p>
+    </div>
+
+    <form class="login-form" (ngSubmit)="login()" novalidate>
+      <div class="form-group">
+        <label for="email">Email</label>
+
+        <input
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          (blur)="markEmailTouched()"
+          placeholder="owner@paratech.com"
+          autocomplete="email"
+          [class.invalid]="emailTouched && !isEmailValid"
+        />
+
+        <small class="field-error" *ngIf="emailTouched && !email">
+          L’email est obligatoire.
+        </small>
+
+        <small class="field-error" *ngIf="emailTouched && email && !isEmailValid">
+          Format invalide. Exemple : client&#64;paratech.com
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+
+        <input
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          (blur)="markPasswordTouched()"
+          placeholder="Votre mot de passe"
+          autocomplete="current-password"
+          [class.invalid]="passwordTouched && !isPasswordValid"
+        />
+
+        <small class="field-error" *ngIf="passwordTouched && !password">
+          Le mot de passe est obligatoire.
+        </small>
+
+        <small class="field-error" *ngIf="passwordTouched && password && !isPasswordValid">
+          Le mot de passe doit contenir au moins 6 caractères.
+        </small>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="login-button" [disabled]="loading || !isFormValid">
+        {{ loading ? 'Connexion...' : 'Se connecter' }}
+      </button>
+    </form>
+
+    <p class="register-link">
+      Vous n’avez pas encore de compte ?
+      <a routerLink="/register">Créer un compte</a>
+    </p>
+  </section>
+</div>
